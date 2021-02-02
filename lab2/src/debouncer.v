@@ -35,7 +35,7 @@ module debouncer #(
 
   genvar i;
   generate for (i = 0; i < WIDTH; i = i + 1) begin
-		REGISTER_R_CE #(.N(SAT_CNT_WIDTH), .INIT(0)) sat_cnt (
+    REGISTER_R_CE #(.N(SAT_CNT_WIDTH), .INIT(0)) sat_cnt (
       .q(sat_cnt_value[i]),
       .d(sat_cnt_next[i]),
       .rst(sat_cnt_rst[i]),
