@@ -546,7 +546,13 @@ Now that we have tested all the modules required to produce a clean, stable butt
 
 \subsubsection{Counter with with Button Parser}
 Look at \verb|src/button_parser.v| which combines the synchronizer, debouncer, and edge detector in a chain.
-Create a Vivado project (or reuse existing project). Add these files \verb|lab2/src/synchronizer.v|, \verb|lab2/src/debouncer.v|, \verb|lab2/src/edge_detector.v|, \verb|lab2/src/button_parser.v|, \verb|lab2/src/z1top_mode_counter.v|, \verb|lib/EECS151.v|, and \verb|lab2/constraints/pynq-z1.xdc|. Set \verb|z1top_mode_counter| as the top-level module. Generate a bitstream and test this circuit on the PYNQ board. Check that each button performs the right action as written in \texttt{z1top\_mode\_counter.v}.
+Create a Vivado project (or reuse existing project). Add these files
+
+\verb|lab2/src/synchronizer.v|, \verb|lab2/src/debouncer.v|, \verb|lab2/src/edge_detector.v|,
+
+\verb|lab2/src/button_parser.v|, \verb|lab2/src/z1top_mode_counter.v|, \verb|lib/EECS151.v|,
+
+and \verb|lab2/constraints/pynq-z1.xdc|. Set \verb|z1top_mode_counter| as the top-level module. Generate a bitstream and test this circuit on the PYNQ board. Check that each button performs the right action as written in \texttt{z1top\_mode\_counter.v}.
 
 \subsubsection{Play and Pause your Counter}
 
