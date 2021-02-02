@@ -505,6 +505,8 @@ The VM sets up USB filtering to recognize the devices we use for this class. For
   sudo usermod -a -G vboxusers $USER
 \end{verbatim}
 
+If you are a Mac user and have issue with the Hardware Manager (keep getting disconnected after some time), try enabling USB3.0 setting in your VM setting to see if it helps. To do so, first, please download the \href{https://www.oracle.com/virtualization/technologies/vm/downloads/virtualbox-downloads.html#extpack}{VirtualBox Extension Pack}. Next, please follow this \href{https://techspite.com/how-to-install-virtualbox-extension-pack-and-enable-usb-3-0-2/}{guide} to enable USB3.0 in VirtualBox.
+
 \section{Installing Vivado Locally}
 \label{section:localvivado}
 
@@ -557,6 +559,8 @@ Extract and copy the \verb|pynq-z1| folder to
 Download the `Vivado HLx 2019.1: WebPACK and Editions - Windows Self Extracting Web Installer' from the `Vivado Design Suite - HLx Editions - 2019.1  Full Product Installation' Linux bin from \href{https://www.xilinx.com/support/download/index.html/content/xilinx/en/downloadNav/vivado-design-tools/archive.html}{Xilinx}.
 Execute the downloaded exe.
 Also, you should only select the install options we're going to use in this class to save disk space, as described in the Linux section.
+
+If you have a driver issue when connecting the board to your computer, please follow this guide to see if it helps: \href{https://forums.xilinx.com/t5/Design-and-Debug-Techniques-Blog/Manually-installing-Cable-Drivers-for-Xilinx-Platform-Cable-USB/ba-p/992593}{Installing Cable Drivers}
 
 \section{Installing Vivado Hardware Server Locally}
 \label{section:localserver}
