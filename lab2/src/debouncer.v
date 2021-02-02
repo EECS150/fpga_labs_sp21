@@ -50,7 +50,7 @@ module debouncer #(
   assign wrapping_cnt_next = 0;
   assign wrapping_cnt_rst = 0;
   generate for (i = 0; i < WIDTH; i = i + 1) begin
-		assign debounced_signal[i] = (sat_cnt_value[i] == PULSE_CNT_MAX);
+    assign debounced_signal[i] = (sat_cnt_value[i] == PULSE_CNT_MAX);
 
     // TODO: Update these lines
     assign sat_cnt_next[i] = 0;
