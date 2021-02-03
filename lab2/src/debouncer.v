@@ -44,8 +44,6 @@ module debouncer #(
   end
   endgenerate
 
-  // TODO: synchronizer instantiation
-
   // TODO: Update these lines
   assign wrapping_cnt_next = 0;
   assign wrapping_cnt_rst = 0;
