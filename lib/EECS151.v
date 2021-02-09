@@ -77,5 +77,152 @@ endmodule // REGISTER_R_CE
  Memory Blocks.
 */
 
-// TODO(tan)
+// Single-ported ROM with asynchronous read
+module ASYNC_ROM(q, addr);
+  parameter DWIDTH = 8;             // Data width
+  parameter AWIDTH = 8;             // Address width
+  parameter DEPTH  = (1 << AWIDTH); // Memory depth
+  parameter MIF_HEX = "";
+  parameter MIF_BIN = "";
 
+  input  [AWIDTH-1:0] addr; // address
+  output [DWIDTH-1:0] q;    // read data
+
+  (* rom_style = "distributed" *) reg [DWIDTH-1:0] mem [DEPTH-1:0];
+
+  integer i;
+  initial begin
+    if (MIF_HEX != "") begin
+      $readmemh(MIF_HEX, mem);
+    end
+    else if (MIF_BIN != "") begin
+      $readmemb(MIF_BIN, mem);
+    end
+    else begin
+      for (i = 0; i < DEPTH; i = i + 1) begin
+        mem[i] = 0;
+      end
+    end
+  end
+
+  assign q = mem[addr];
+endmodule // ASYNC_ROM
+
+// Single-ported RAM with asynchronous read
+module ASYNC_RAM(q, d, addr, we, clk);
+  parameter DWIDTH = 8;             // Data width
+  parameter AWIDTH = 8;             // Address width
+  parameter DEPTH  = (1 << AWIDTH); // Memory depth
+  parameter MIF_HEX = "";
+  parameter MIF_BIN = "";
+
+  input               clk;
+  input  [AWIDTH-1:0] addr; // address
+  input 	            we;   // write-enable
+  input  [DWIDTH-1:0] d;    // write data
+  output [DWIDTH-1:0] q;    // read data
+
+  (* ram_style = "distributed" *) reg [DWIDTH-1:0] mem [DEPTH-1:0];
+
+  integer i;
+  initial begin
+    if (MIF_HEX != "") begin
+      $readmemh(MIF_HEX, mem);
+    end
+    else if (MIF_BIN != "") begin
+      $readmemb(MIF_BIN, mem);
+    end
+    else begin
+      for (i = 0; i < DEPTH; i = i + 1) begin
+        mem[i] = 0;
+      end
+    end
+  end
+
+  always @(posedge clk) begin
+    if (we)
+      mem[addr] <= d;
+  end
+
+  assign q = mem[addr];
+endmodule // ASYNC_RAM
+
+// Single-ported ROM with synchronous read
+module SYNC_ROM(q, addr, clk);
+  parameter DWIDTH = 8;             // Data width
+  parameter AWIDTH = 8;             // Address width
+  parameter DEPTH  = (1 << AWIDTH); // Memory depth
+  parameter MIF_HEX = "";
+  parameter MIF_BIN = "";
+
+  input 	            clk;
+  input  [AWIDTH-1:0] addr; // address
+  output [DWIDTH-1:0] q;    // read data
+
+  (* rom_style = "block" *) reg [DWIDTH-1:0] mem [DEPTH-1:0];
+
+  integer i;
+  initial begin
+    if (MIF_HEX != "") begin
+      $readmemh(MIF_HEX, mem);
+    end
+    else if (MIF_BIN != "") begin
+      $readmemb(MIF_BIN, mem);
+    end
+    else begin
+      for (i = 0; i < DEPTH; i = i + 1) begin
+        mem[i] = 0;
+      end
+    end
+  end
+
+  reg [DWIDTH-1:0] read_data_reg;
+  always @(posedge clk) begin
+    read_data_reg <= mem[addr];
+  end
+
+  assign q = read_data_reg;
+endmodule // SYNC_ROM
+
+// Single-ported RAM with synchronous read
+module SYNC_RAM(q, d, addr, we, clk);
+  parameter DWIDTH = 8;           // Data width
+  parameter AWIDTH = 8;           // Address width
+  parameter DEPTH  = 1 << AWIDTH; // Memory depth
+  parameter MIF_HEX = "";
+  parameter MIF_BIN = "";
+
+  input               clk;
+  input  [AWIDTH-1:0] addr; // address
+  input 	            we;   // write-enable
+  input  [DWIDTH-1:0] d;    // write data
+  output [DWIDTH-1:0] q;    // read data
+
+  (* ram_style = "block" *) reg [DWIDTH-1:0] mem [DEPTH-1:0];
+
+  integer i;
+  initial begin
+    if (MIF_HEX != "") begin
+      $readmemh(MIF_HEX, mem);
+    end
+    else if (MIF_BIN != "") begin
+      $readmemb(MIF_BIN, mem);
+    end
+    else begin
+      for (i = 0; i < DEPTH; i = i + 1) begin
+        mem[i] = 0;
+      end
+    end
+  end
+
+  reg [DWIDTH-1:0] read_data_reg;
+  always @(posedge clk) begin
+    if (we)
+      mem[addr] <= d;
+    read_data_reg <= mem[addr];
+  end
+
+  assign q = read_data_reg;
+endmodule // SYNC_RAM
+
+// TODO(tan): dual-port Memory blocks
