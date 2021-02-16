@@ -135,4 +135,13 @@ module display_controller_tb();
     $finish();
   end
 
+  initial begin
+    // Should not take more than the number of cycles needed to cycle
+    // through the entire video frame (plus some spare cycles)
+    repeat (H_FRAME * V_FRAME + 1000) @(posedge clk);
+
+    $display("Timeout!");
+    $finish();
+  end
+
 endmodule
