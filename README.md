@@ -6,6 +6,8 @@ Lab 2: Due 02/10/2021
 
 Lab 3: Due 02/17/2021
 
+Lab 4: Due 02/24/2021
+
 # Resources
 
 PYNQ-Z1 Reference Manual: https://reference.digilentinc.com/reference/programmable-logic/pynq-z1/reference-manual
