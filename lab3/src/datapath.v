@@ -65,7 +65,7 @@ module datapath #(
   wire wen;
   ASYNC_RAM #(
     .AWIDTH(WIDTH),
-    .DWIDTH(WIDTH),
+    .DWIDTH(WIDTH)
   ) RF (
     .clk(clk),
     .addr(addr),
