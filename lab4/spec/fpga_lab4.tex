@@ -315,10 +315,9 @@ The following diagram depicts the system that we would like to run on the FPGA.
 \includegraphics[width=0.6\textwidth]{figs/z1top_fifo_display.png}
 \end{center}
 
-
 The system consists of a pixel streaming block that sends pixel data of an image stored in a ROM every clock cycle to a FIFO. A display controller reads the pixel data from the FIFO and communicates with the Digilent IP to display image on a connected display device. You are responsible for the \verb|FIFO| (from Part 2) and the \verb|display_controller| modules; the remaining blocks are provided to you and you should not need to modify them. Note that your \verb|FIFO| and \verb|display_controller| are now clocked with the pixel clock (40 MHz) instead of the system clock (125 MHz). The pixel clock is generated from the \verb|PLLE| module acting as a clock synthesizer to output a 40 MHz clock from an input 125 MHz clock. We won't go into detail of it for now, but you should keep in mind that there are many ways to generate clock signals on the FPGA.
 
-In summary, the \verb|pixel_stream| is a producer which sends a stream of pixels stored in the ROM to your FIFO. The \verb|display_controller| is a consumer which reads data from your FIFO if it is not empty, and generates video signals for the \verb|rgb2dvi| IP core. Since we are dealing with an IP, we won't be creating Vivado project by just adding Verilog files. Vivado also provides an \texttt{IP Integrator} feature allowing designers to connect their modules at the block level. We won't into the details of using IP Integrator in this lab. Instead, you can run the script that we provide you. It should create the project with all the modules connected properly.
+In summary, the \verb|pixel_stream| is a producer which sends a stream of pixels stored in the ROM to your FIFO. The \verb|display_controller| is a consumer which reads data from your FIFO if it is not empty, and generates video signals for the \verb|rgb2dvi| IP core. Since we are dealing with an IP, we won't be creating Vivado project by just adding Verilog files. Vivado also provides an \texttt{IP Integrator} feature allowing designers to connect their modules at the block level. You can run the script that we provide you to build the block design and genearte the bitstream automatically. Nonetheless, if you'd like to understand the entire process and what it takes, check out the Appendix \ref{section:ipi} for how to use Vivado IP Integrator for this lab exercise. It should create the project with all the modules connected properly.
 
 Your \textbf{first task} is to implement a display controller in \verb|lab4/src/display_controller.v| that conforms to the video signal timings described above. You do not need to read from the FIFO for now, instead, you should write a constant video output (e.g., 24'h00FF00) to the \verb|rgb2dvi| module. \textbf{This should only require a few lines of code}.
 
@@ -338,7 +337,7 @@ make sim proj=z1top_fifo_display tb=display_controller_tb
 make write-bitstream proj=z1top_fifo_display
 \end{minted}
 
-It is recommended that you run the scripts under the Linux development environment, such as the lab machines or the VM. If you are using Windows, in case the commands do not work, you can work with GUI as usual. You need to source the TCL scripts to build the project. Open Vivado GUI, under the TCL Console at the bottom, type
+It is recommended that you run the scripts under the Linux development environment, such as the lab machines or the VM. If you are using Windows, in case the commands do not work, you can work with GUI as usual. You can follow the Appendix \ref{section:ipi} to create the project with Vivado IPI. Alternatively, you can source the TCL scripts to build the project. Open Vivado GUI, under the TCL Console at the bottom, type
 
 \begin{minted}{bash}
 # This only applies to Windows' users
@@ -355,7 +354,7 @@ You might want to open up the Vivado project to inspect what actually happens (o
 \fbox{\includegraphics[width=0.8\textwidth]{figs/block_design.png}}
 \end{center}
 
-Note that when you use Vivado GUI, before generating bitstream, click on \textbf{Refresh Module Changes} to make sure Vivado get the latest update of your source files whenever you modify them.
+Note that when you use Vivado GUI, before generating bitstream, click on \textbf{Refresh Changed Modules} to make sure Vivado get the latest update of your source files whenever you modify them.
 
 If you successfully generate a bitstream, you can download it to an FPGA using the following command. You can skip this step if you don't wish to test your design on the board with an HDMI monitor.
 
@@ -405,11 +404,121 @@ To checkoff for this lab, have these things ready to show the TA:
   \item Your answers to the questions in sections \ref{sec:Q1} and \ref{sec:Q2}.
 \end{enumerate}
 
-%\appendix
-%\section{Using Vivado IP Integrator}
+\appendix
+\section{Using Vivado IP Integrator}
+\label{section:ipi}
 %Stay tuned.
 
-\newpage
+This appendix will walk you through how to use Vivado IP Integrator (IPI) to create
+a design. Vivado IPI enables us to compose a hardware design at a block level, and
+facilitates the connection of the hardware blocks by hand or TCL commands. 
+
+First, create a project and add your source files as usual. For this lab, make sure that you add the following files
+
+\verb|lab4/src/button_parser.v|, \verb|lab4/src/synchronizer.v|,
+
+\verb|lab4/src/edge_detector.v|, \verb|lab4/src/debouncer.v|,
+
+\verb|lab4/src/fifo.v|, \verb|lab4/src/fifo_display.v|,
+
+\verb|lab4/src/pixel_stream.v|, \verb|lab4/src/display_controller.v|,
+
+\verb|lab4/src/clk_wiz.v|, \verb|lab4/src/colors.vh|,
+
+\verb|lab4/src/z1top_fifo_display.v|, \verb|lab4/src/ucb_wheeler_hall_bin.mif|,
+
+\verb|lib/EECS151.v|
+
+as \textit{Source files}
+
+and add the constraint file \verb|lab4/constr/z1top.xdc| as \textit{Constraint files}.
+
+Next, click \emph{Create Block Design} under \emph{IP Integrator} in the \emph{Flow Navigator} column.
+It will create an empty block design with a default name "design\_1.bd"
+
+\begin{center}
+\fbox{\includegraphics[width=0.6\textwidth]{figs/bd0.png}}
+\end{center}
+
+Next, click \emph{IP Catalog} under \emph{Project Manager} in the \emph{Flow Navigator} column.
+In the \texttt{IP Catalog} pane, right click then select \emph{Add Repository}. Specify the path
+to the Digilent IPs (\verb|lab4/digilent_ips|), then hit \emph{Select}.
+
+Next, click \emph{Open Block Design} under \emph{IP Integrator} to open the block design canvas.
+Right click on the \verb|z1top_fifo_display| module in the \textit{Sources} pane, then
+select \emph{Add Module to Block Design}. Your RTL core will appear as a "black box" in the
+block design canvas.
+
+\begin{center}
+\fbox{\includegraphics[width=0.7\textwidth]{figs/bd1.png}}
+\end{center}
+
+We proceed to add the Digilent video IP. Right click anywhere on the canvas, select \emph{Add IP}.
+A dialog will appear. It provides a list of IPs available in Vivado. Since we already added
+the Digilent IP, Vivado should be able to find it. Type "digilent" in the search box,
+click the IP name to add it to the block design canvas as shown below.
+
+\begin{center}
+\fbox{\includegraphics[width=0.7\textwidth]{figs/bd2.png}}
+\end{center}
+
+Vivado block design presents to you the block-level view of your modules. Here, you only see the input and output pins of each of the blocks. Connect the blocks as follows.
+
+\begin{enumerate}
+\item \texttt{pixel\_clk} goes to \texttt{PixelClk}
+\item \texttt{video\_out\_pData} goes to \texttt{vid\_pData} (you need to expand the RGB interface to see the full list of IO ports)
+\item \texttt{video\_out\_pHSync} goes to \texttt{vid\_pHSync}
+\item \texttt{video\_out\_pVSync} goes to \texttt{vid\_pVSync}
+\item \texttt{video\_out\_pVDE} goes to \texttt{vid\_pVDE}
+\item You can ignore the pin \texttt{aRst} of the \texttt{rgb2dvi} IP
+\end{enumerate}
+
+\begin{center}
+\fbox{\includegraphics[width=0.7\textwidth]{figs/bd3.png}}
+\end{center}
+
+Next, click on the ports \texttt{CLK\_125MHZ\_FPGA}, \texttt{BUTTONS[3:0]}, \texttt{SWITCHES[1:0]}, \texttt{LEDS[1:0]}, and \texttt{TMDS}. Right click and select
+\emph{Make External}. Vivado will create the block design's input and output pins that connect to those ports.
+
+\begin{center}
+\fbox{\includegraphics[width=0.7\textwidth]{figs/bd4.png}}
+\end{center}
+
+Rename the external IO ports as follows (click on an external port, then on the \texttt{External Port Properties} pane, modify its name in the \texttt{Name} box)
+
+\texttt{CLK\_125MHZ\_FPGA\_0} to \texttt{CLK\_125MHZ\_FPGA}
+
+\texttt{SWITCHES[1:0]\_0} to \texttt{SWITCHES[1:0]}
+
+\texttt{BUTTONS[3:0]\_0} to \texttt{BUTTONS[3:0]}
+
+\texttt{LEDS[5:0]\_0} to \texttt{LEDS[1:0]}
+
+This ensures that they match the ports' names specified in the constraint file.
+
+Basically, the idea is that the block design is the top-level module, and the IPs are the children modules instantiated internally.
+
+The next step is to actually create an HDL wrapper for our block design, and set it as the top-level module so that we can synthesize and implement it as similar to how we did for the RTL modules in previous lab exercises. We can let Vivado manage wrapper and auto-update.
+
+\begin{center}
+\fbox{\includegraphics[width=0.7\textwidth]{figs/bd5.png}}
+\end{center}
+
+Click on the \texttt{rgb2dvi} IP, a window with the IP setting will pop up. For the \emph{TMDS Clock Range}, choose \emph{< 80MHz} since we use a 40MHz pixel clock in this design.
+
+\begin{center}
+\fbox{\includegraphics[width=0.7\textwidth]{figs/bd7.png}}
+\end{center}
+
+In the \texttt{Diagram} window, you can also click on the \texttt{Regenerate Layout} button to let the tool automatically shifting the IP blocks and their connection for better visualization. Click \texttt{Validate Design} button to check for any outstanding issues in your design. If not, you can proceed to generate bitstream as usual. Note that your top-level module is now \verb|design_1_wrapper|, instead of the \verb|z1top_fifo_display|.
+
+\begin{center}
+\fbox{\includegraphics[width=0.7\textwidth]{figs/bd6.png}}
+\end{center}
+
+Remember that whenever you change an RTL source file, click \textbf{Refresh Changed Modules} so that the changes are effective before generating bitstream.
+
+%\newpage
 \section*{Acknowlegement}
 This lab is the result of the work of many EECS151/251 GSIs over the years including:
 \begin{itemize}
