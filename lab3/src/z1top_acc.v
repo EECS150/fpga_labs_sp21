@@ -67,6 +67,7 @@ module z1top_acc (
     .MIF_HEX("test_data_sync.mif")
   ) srom (
     .clk(CLK_125MHZ_FPGA),
+    .en(1'b1),
     .addr(s_read_addr), // input
     .q(s_read_data)     // output
   );

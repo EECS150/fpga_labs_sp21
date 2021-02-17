@@ -36,6 +36,7 @@ module acc_sync_read_tb();
     .MIF_HEX("test_data_sim.mif")
   ) rom (
     .clk(clk),
+    .en(1'b1),
     .addr(rom_addr), // input
     .q(rom_data)     // output
   );
