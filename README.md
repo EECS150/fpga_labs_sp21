@@ -8,7 +8,7 @@ Lab 3: Due 02/17/2021
 
 Lab 4: Due 02/24/2021
 
-Lab 4: Due 03/10/2021
+Lab 5: Due 03/10/2021
 
 # Resources
 
