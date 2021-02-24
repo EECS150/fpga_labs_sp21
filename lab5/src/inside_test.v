@@ -69,7 +69,7 @@
   // the current pixel is being tested, and the previous pixel is output
 
   // TODO: you should add one or a few more pipeline stages to improve the timing of the circuit
-  // The goal is to meet 62.5 MHz clock frequency (16ns).
+  // The goal is to meet 74.25 MHz clock frequency (14ns).
   // Try to use as fewer stages as possible to achieve the desirable clock frequency.
 
   // When you add a new pipeline stage, make sure to register all the signals

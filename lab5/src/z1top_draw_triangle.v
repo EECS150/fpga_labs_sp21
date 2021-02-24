@@ -23,7 +23,7 @@ module z1top_draw_triangle (
   assign clk_in1 = CLK_125MHZ_FPGA;
 
   // TODO: Reduce the PIXEL_CLK_PERIOD to test with higher pixel clock frequency
-  // The goal is to meet a pixel clock of 16 ns.
+  // The goal is to meet a pixel clock of 14 ns.
   localparam PIXEL_CLK_PERIOD = 25;
 
   localparam PIXEL_CLK_FREQ = 1_000_000_000 / PIXEL_CLK_PERIOD;
