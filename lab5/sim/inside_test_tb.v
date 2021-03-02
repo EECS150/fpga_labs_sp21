@@ -89,6 +89,9 @@ module inside_test_tb();
 
   initial begin
     #0;
+    $dumpfile("inside_test_tb.vcd");
+    $dumpvars;
+
     num_mismatches = 0;
 
     x0 = X0; y0 = Y0; 

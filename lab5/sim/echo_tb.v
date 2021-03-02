@@ -41,7 +41,7 @@ module echo_tb();
 
   // initialize test vectors
   initial begin
-    #0
+    #0;
     for (c = 0; c < NUM_CHARS; c = c + 1) begin
       chars_from_host[c] = CHAR0 + c;
     end
@@ -120,6 +120,9 @@ module echo_tb();
 
   initial begin
     #0;
+    $dumpfile("echo_tb.vcd");
+    $dumpvars;
+
     rst = 1'b1;
 
     // Hold reset for a while
