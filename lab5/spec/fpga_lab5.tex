@@ -259,7 +259,7 @@ In this section, you will put both the UART Receiver and Transmitter together, a
 make build-project proj=z1top_uart_echo
 
 # Simulate with the testbench echo_tb
-mkae sim proj=z1top_uart_echo tb=echo_tb
+make sim proj=z1top_uart_echo tb=echo_tb
 
 # Generate bitstream
 make write-bitstream proj=z1top_uart_echo
@@ -322,6 +322,8 @@ make build-project proj=z1top_draw_triangle
 make sim proj=z1top_draw_triangle tb=inside_test_tb
 
 # Generate bitstream
+# Before generating bitstream, make sure that you have implemented the video timing signals
+# properly in src/draw_triangle.v
 make write-bitstream proj=z1top_draw_triangle
 
 # The timing report can be found at
